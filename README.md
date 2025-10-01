@@ -1,11 +1,43 @@
 Manila Flood Risk Mapping System
-This project creates a flood risk mapping system for Manila, Philippines using geospatial data analysis and interactive visualization. The system processes geographical coordinates, flood height, elevation, and precipitation data to calculate and visualize flood risk through an interactive heat map.
+An interactive geospatial analysis tool for visualizing and assessing flood risk across Manila, Philippines.
+Overview
+This project implements a comprehensive flood risk mapping system that processes geographical and meteorological data to generate interactive visualizations of flood-prone areas in Manila. The system combines multiple risk factors including terrain elevation, historical flood heights, and precipitation patterns to produce actionable risk assessments for urban planning and disaster management.
+Features
+
+Multi-factor Risk Analysis: Integrates flood height, elevation, and precipitation data
+Interactive Visualization: Heat map overlay on an interactive Folium map
+Risk Categorization: Five-tier color-coded risk levels (Low to Critical)
+Exportable Maps: Generates standalone HTML files for offline viewing
+Data Normalization: Standardized scoring system for consistent risk assessment
+
 Dataset
-The data is sourced from the AEGIS Dataset available at https://www.kaggle.com/datasets/giologicx/aegisdataset. The CSV file contains latitude, longitude, flood height, elevation, and precipitation measurements for various locations in Manila.
-Code Overview
-The system begins by loading and cleaning the dataset, converting all numerical columns to proper data types and removing any rows with missing values. Data normalization is then applied to scale flood height, elevation, and precipitation values to a 0-1 range, with elevation values inverted since lower elevation typically indicates higher flood risk.
-A weighted risk score is calculated using the formula: flood_height×0.4 + elevation×0.3 + precipitation×0.3. This score is then color-coded into five risk categories ranging from green (low risk, <0.2) to dark red (critical risk, >0.8), with yellow, orange, and red representing intermediate levels.
-The final step creates an interactive Folium map centered on Manila coordinates with a heat map overlay displaying the calculated risk scores. The visualization includes radius and zoom parameters optimized for clear risk pattern identification across the metropolitan area.
-Usage
-This code must be executed in Google Colab to properly handle file uploads and display the interactive map. After running all cells and uploading the dataset when prompted, the system outputs detailed risk scores for each location and generates both an inline interactive map and an HTML file named 'manila_flood_risk_map.html' for offline viewing.
-The resulting visualization provides urban planners and disaster management authorities with a comprehensive tool for identifying high-risk flood zones and supporting evidence-based decision making for flood mitigation strategies in Manila.
+The project utilizes the AEGIS Dataset, which contains comprehensive geospatial and meteorological measurements for Manila:
+
+Source: AEGIS Dataset on Kaggle
+Data Points: Latitude, Longitude, Flood Height, Elevation, Precipitation
+Coverage: Metropolitan Manila area
+
+Methodology
+Data Processing
+
+Data Cleaning: Converts all numerical columns to appropriate data types and removes incomplete records
+Normalization: Scales all measurements to a 0-1 range for consistent comparison
+Elevation Inversion: Lower elevations receive higher risk scores (inverted scaling)
+
+Risk Calculation
+The system calculates a weighted composite risk score using the following formula:
+Risk Score = (Flood Height × 0.4) + (Elevation × 0.3) + (Precipitation × 0.3)
+Weighting Rationale:
+
+Flood Height (40%): Primary indicator of actual flood risk
+Elevation (30%): Topographical vulnerability factor
+Precipitation (30%): Meteorological risk contributor
+
+Risk Categories
+CategoryScore RangeColorDescriptionLow< 0.2GreenMinimal flood riskModerate0.2 - 0.4YellowSome risk during heavy rainfallHigh0.4 - 0.6OrangeSignificant flood potentialVery High0.6 - 0.8RedHigh vulnerabilityCritical> 0.8Dark RedExtreme flood risk
+Installation & Usage
+Requirements
+
+Python 3.7+
+Google Colab (recommended) or Jupyter Notebook
+Required libraries: pandas, folium, numpy
