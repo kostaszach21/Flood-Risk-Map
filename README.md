@@ -1,43 +1,32 @@
-Manila Flood Risk Mapping System
-An interactive geospatial analysis tool for visualizing and assessing flood risk across Manila, Philippines.
-Overview
-This project implements a comprehensive flood risk mapping system that processes geographical and meteorological data to generate interactive visualizations of flood-prone areas in Manila. The system combines multiple risk factors including terrain elevation, historical flood heights, and precipitation patterns to produce actionable risk assessments for urban planning and disaster management.
-Features
+This project is dedicated to calculating a quantitative, composite Flood Risk Score for a target geographical region, using data points from the AEGIS dataset (Manila). Instead of relying on a single vulnerability factor, the final score combines multiple critical elements influencing flood risk.
 
-Multi-factor Risk Analysis: Integrates flood height, elevation, and precipitation data
-Interactive Visualization: Heat map overlay on an interactive Folium map
-Risk Categorization: Five-tier color-coded risk levels (Low to Critical)
-Exportable Maps: Generates standalone HTML files for offline viewing
-Data Normalization: Standardized scoring system for consistent risk assessment
+Core Logic Stages
 
-Dataset
-The project utilizes the AEGIS Dataset, which contains comprehensive geospatial and meteorological measurements for Manila:
+Data Preparation and Cleaning: Data is loaded, and critical features (latitude, longitude, flood_heig, elevation, precipitat) are converted to numeric types. Rows with missing values in these features are removed.
 
-Source: AEGIS Dataset on Kaggle
-Data Points: Latitude, Longitude, Flood Height, Elevation, Precipitation
-Coverage: Metropolitan Manila area
+Feature Engineering: The Slope of the terrain is calculated for each data point using the k-nearest neighbors method. A full implementation should also include calculating the Distance to River using the osmnx and geopandas libraries.
 
-Methodology
-Data Processing
+Normalization: All features are scaled to a 0-to-1 range. Features where a low value indicates high risk (such as Elevation and Slope) are mathematically inverted (1 - score) so that for all final inputs, a higher value consistently represents a higher risk.
 
-Data Cleaning: Converts all numerical columns to appropriate data types and removes incomplete records
-Normalization: Scales all measurements to a 0-1 range for consistent comparison
-Elevation Inversion: Lower elevations receive higher risk scores (inverted scaling)
+Automated Weight Assignment: Weights for the normalized features are automatically assigned using an Inverse Correlation method. This technique assigns higher weights to features that show less correlation with the other independent variables, thus aiming to reduce multicollinearity and ensure each feature contributes unique information to the final score.
 
-Risk Calculation
-The system calculates a weighted composite risk score using the following formula:
-Risk Score = (Flood Height × 0.4) + (Elevation × 0.3) + (Precipitation × 0.3)
-Weighting Rationale:
+Final Risk Score Calculation: The final Risk Score is computed as a weighted average of the normalized and weighted input features.
 
-Flood Height (40%): Primary indicator of actual flood risk
-Elevation (30%): Topographical vulnerability factor
-Precipitation (30%): Meteorological risk contributor
+Prerequisites
+The Anaconda or Miniconda distribution is required to manage Python environments and correctly install complex geospatial libraries like geopandas and osmnx. These instructions are tailored for a Windows operating system.
 
-Risk Categories
-CategoryScore RangeColorDescriptionLow< 0.2GreenMinimal flood riskModerate0.2 - 0.4YellowSome risk during heavy rainfallHigh0.4 - 0.6OrangeSignificant flood potentialVery High0.6 - 0.8RedHigh vulnerabilityCritical> 0.8Dark RedExtreme flood risk
-Installation & Usage
-Requirements
+Execution Steps
 
-Python 3.7+
-Google Colab (recommended) or Jupyter Notebook
-Required libraries: pandas, folium, numpy
+Step 1: Create and Activate a Clean Environment
+Open the Anaconda Prompt (search for it in the Windows Start Menu) and execute the following commands to set up a dedicated Python environment:
+
+conda create -n flood_env python=3.10
+conda activate flood_env
+conda install -c conda-forge pandas numpy scipy jupyter geopandas osmnx
+
+Step 3: Run the Jupyter Notebook
+Once installation is complete, navigate to the project directory using the Anaconda Prompt (e.g., cd C:\Users\YourName\MyProjectFolder) and launch the Jupyter Notebook from the same active environment:
+
+jupyter notebook
+
+Open the project's .ipynb file, ensure the flood_env kernel is selected, and execute the code cells sequentially. The code will perform all data processing and calculate the final risk score.
