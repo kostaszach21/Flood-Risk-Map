@@ -1,32 +1,56 @@
-This project is dedicated to calculating a quantitative, composite Flood Risk Score for a target geographical region, using data points from the AEGIS dataset (Manila). Instead of relying on a single vulnerability factor, the final score combines multiple critical elements influencing flood risk.
+# Manila Flood Risk Map V7
 
-Core Logic Stages
+## Project Overview
+This project analyzes and visualizes flood risk in Manila using geospatial and meteorological data. The goal is to identify high-risk areas based on key environmental factors and present them in an interactive, accurate map.
 
-Data Preparation and Cleaning: Data is loaded, and critical features (latitude, longitude, flood_heig, elevation, precipitat) are converted to numeric types. Rows with missing values in these features are removed.
+## Key Features in V7
+*   **Grid-Based Visualization:** A major upgrade from standard heatmaps. The map now uses a grid system where each cell is colored based on the **maximum risk score** within it. This ensures that isolated high-risk points are clearly visible and not washed out by surrounding low-risk data.
+*   **Composite Risk Score:** Calculates a weighted risk score (0-1) based on:
+    *   **Elevation:** Lower elevation = Higher risk.
+    *   **Precipitation:** Higher rainfall = Higher risk.
+    *   **Flood Height:** Historical flood levels.
+    *   **Slope:** Flatter terrain = Higher risk.
+*   **Interactive Map:** A fully interactive HTML map with:
+    *   Color-coded grid cells indicating risk intensity.
+    *   Specific markers for "Danger Zones" (Risk Score > 0.8).
+    *   A custom legend for easy interpretation.
+*   **Data Analysis:** Includes scatter plots and correlation matrices to understand feature relationships.
 
-Feature Engineering: The Slope of the terrain is calculated for each data point using the k-nearest neighbors method. A full implementation should also include calculating the Distance to River using the osmnx and geopandas libraries.
+## Methodology
 
-Normalization: All features are scaled to a 0-to-1 range. Features where a low value indicates high risk (such as Elevation and Slope) are mathematically inverted (1 - score) so that for all final inputs, a higher value consistently represents a higher risk.
+### 1. Data Preprocessing
+-   Loads `AEGISDataset.csv`.
+-   Cleans missing values and converts columns to numeric types.
+-   Normalizes features to a 0-1 scale.
 
-Automated Weight Assignment: Weights for the normalized features are automatically assigned using an Inverse Correlation method. This technique assigns higher weights to features that show less correlation with the other independent variables, thus aiming to reduce multicollinearity and ensure each feature contributes unique information to the final score.
+### 2. Risk Calculation
+-   **Slope Calculation:** Computes slope for each point using a vectorized approach with a KDTree for efficiency.
+-   **Weighting:** Weights are derived dynamically from the inverse of the correlation matrix, giving more importance to unique (less correlated) features.
+-   **Formula:** `Risk Score = Σ (Feature * Weight)`
 
-Final Risk Score Calculation: The final Risk Score is computed as a weighted average of the normalized and weighted input features.
+### 3. Visualization (The Fix)
+-   **Problem:** Standard heatmaps prioritize point density, often hiding isolated high-risk areas.
+-   **Solution (V7):** We implement a spatial grid (binning).
+    -   The map is divided into ~500m x 500m cells.
+    -   Each cell's color is determined by the **MAXIMUM** risk score of any point inside it.
+    -   **Green:** Very Low Risk (< 0.2)
+    -   **Yellow:** Low Risk (0.2 - 0.4)
+    -   **Orange:** Medium Risk (0.4 - 0.6)
+    -   **Red:** High Risk (0.6 - 0.8)
+    -   **Dark Red:** Very High Risk (> 0.8)
 
-Prerequisites
-The Anaconda or Miniconda distribution is required to manage Python environments and correctly install complex geospatial libraries like geopandas and osmnx. These instructions are tailored for a Windows operating system.
+## Usage
 
-Execution Steps
+1.  **Prerequisites:**
+    -   Python 3.x
+    -   Libraries: `pandas`, `numpy`, `folium`, `scipy`, `seaborn`, `matplotlib`
+2.  **Run the Analysis:**
+    -   Open `Manilla_flood_risk_map_V6.ipynb` (or V7 if renamed).
+    -   Execute all cells.
+3.  **View the Map:**
+    -   Open the generated `Manila_Flood_Risk_Map_V6.html` in your web browser.
 
-Step 1: Create and Activate a Clean Environment
-Open the Anaconda Prompt (search for it in the Windows Start Menu) and execute the following commands to set up a dedicated Python environment:
-
-conda create -n flood_env python=3.10
-conda activate flood_env
-conda install -c conda-forge pandas numpy scipy jupyter geopandas osmnx
-
-Step 3: Run the Jupyter Notebook
-Once installation is complete, navigate to the project directory using the Anaconda Prompt (e.g., cd C:\Users\YourName\MyProjectFolder) and launch the Jupyter Notebook from the same active environment:
-
-jupyter notebook
-
-Open the project's .ipynb file, ensure the flood_env kernel is selected, and execute the code cells sequentially. The code will perform all data processing and calculate the final risk score.
+## Files
+-   `Manilla_flood_risk_map_V6.ipynb`: The main Jupyter Notebook containing the code and analysis.
+-   `AEGISDataset.csv`: The source dataset.
+-   `Manila_Flood_Risk_Map_V6.html`: The generated interactive map.
