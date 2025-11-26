@@ -1,9 +1,9 @@
-# Manila Flood Risk Map V7
+# Manila Flood Risk Map 
 
 ## Project Overview
 This project analyzes and visualizes flood risk in Manila using geospatial and meteorological data. The goal is to identify high-risk areas based on key environmental factors and present them in an interactive, accurate map.
 
-## Key Features in V7
+## Key Features in 
 *   **Grid-Based Visualization:** A major upgrade from standard heatmaps. The map now uses a grid system where each cell is colored based on the **maximum risk score** within it. This ensures that isolated high-risk points are clearly visible and not washed out by surrounding low-risk data.
 *   **Composite Risk Score:** Calculates a weighted risk score (0-1) based on:
     *   **Elevation:** Lower elevation = Higher risk.
@@ -30,7 +30,7 @@ This project analyzes and visualizes flood risk in Manila using geospatial and m
 
 ### 3. Visualization (The Fix)
 -   **Problem:** Standard heatmaps prioritize point density, often hiding isolated high-risk areas.
--   **Solution (V7):** We implement a spatial grid (binning).
+-   **Solution :** We implement a spatial grid (binning).
     -   The map is divided into ~500m x 500m cells.
     -   Each cell's color is determined by the **MAXIMUM** risk score of any point inside it.
     -   **Green:** Very Low Risk (< 0.2)
@@ -45,7 +45,7 @@ This project analyzes and visualizes flood risk in Manila using geospatial and m
     -   Python 3.x
     -   Libraries: `pandas`, `numpy`, `folium`, `scipy`, `seaborn`, `matplotlib`
 2.  **Run the Analysis:**
-    -   Open `Manilla_flood_risk_map_V6.ipynb` (or V7 if renamed).
+    -   Open `Manilla_flood_risk_map_V6.ipynb` 
     -   Execute all cells.
 3.  **View the Map:**
     -   Open the generated `Manila_Flood_Risk_Map_V6.html` in your web browser.
